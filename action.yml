@@ -1,0 +1,31 @@
+name: 'Black Duck Scan (Windows)'
+description: 'Runs Black Duck Detect CLI on Windows runners and uploads SARIF results'
+inputs:
+  blackduck-url:
+    required: true
+    description: 'Black Duck server URL'
+  blackduck-token:
+    required: true
+    description: 'Black Duck API token'
+  project-name:
+    required: true
+    description: 'Project name in Black Duck'
+  version-name:
+    required: true
+    description: 'Version name in Black Duck'
+  output-path:
+    required: false
+    default: 'bd-results'
+    description: 'Path to store SARIF output'
+
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        pwsh .github/actions/blackduck-windows-scan/entry.ps1 `
+          -BlackDuckUrl "${{ inputs.blackduck-url }}" `
+          -BlackDuckToken "${{ inputs.blackduck-token }}" `
+          -ProjectName "${{ inputs.project-name }}" `
+          -VersionName "${{ inputs.version-name }}" `
+          -OutputPath "${{ inputs.output-path }}"
+      shell: pwsh
